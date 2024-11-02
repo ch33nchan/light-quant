@@ -1,8 +1,0 @@
-ruff
-black
-pytest
-mypy
-bandit
-coverage
-pre-commit
-isort
