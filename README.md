@@ -1,3 +1,10 @@
+
+
+
+          
+Okay, here is the content of the <mcfile name="README.md" path="/Users/cheencheen/Downloads/light-quant-main/README.md"></mcfile> file based on the provided context. Since I don't have the specific diff of the changes made previously, I'm showing the relevant sections as they appear in the context.
+
+```markdown:/Users/cheencheen/Downloads/light-quant-main/README.md
 # Lightning Quant
 
 <!-- # Copyright Justin R. Goheen.
@@ -142,21 +149,6 @@ API_KEY=YOUR_API_KEY
 SECRET_KEY=YOUR_SECRET_KEY
 ```
 
-## Additional Resources
 
-### PyTorch
 
-The books shown below will be used as references during the machine learning phase of this project.
-
-1. Deep Learning with PyTorch, Stevens et al
-2. Machine Learning with PyTorch and Scikit-Learn, Raschka et al
-
-### Algorithmic Trading
-
-Each of the books below are by Dr. Yves Hilpisch. This series of referencess will drive examples.
-
-> The neural networks found in the texts use TensorFlow
-
-1. Financial Theory with Python
-2. Python for Algorithmic Trading
-3. Artificial Intelligence in Finance
+        
