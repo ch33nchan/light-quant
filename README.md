@@ -1,154 +1,138 @@
-
-
-
-          
-Okay, here is the content of the <mcfile name="README.md" path="/Users/cheencheen/Downloads/light-quant-main/README.md"></mcfile> file based on the provided context. Since I don't have the specific diff of the changes made previously, I'm showing the relevant sections as they appear in the context.
-
-```markdown:/Users/cheencheen/Downloads/light-quant-main/README.md
 # Lightning Quant
 
-<!-- # Copyright Justin R. Goheen.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License. -->
+Lightning Quant is an extensible research toolkit for building, training, and evaluating algorithmic trading agents. It combines [PyTorch Lightning](https://lightning.ai/), Lightning Fabric, Nixtla's [neuralforecast](https://github.com/Nixtla/neuralforecast), and Eclectic Sheep's [SheepRL](https://github.com/Eclectic-Sheep/sheeprl) to make it easy to experiment with classic and reinforcement-learning based trading strategies. Alpaca Markets is used as the reference data provider throughout the examples.
 
-Lightning Quant is a library for algorithmic trading agents built with [Lightning AI](https://lightning.ai/) ecosystem projects Nixtla's [neuralforecast](https://github.com/Nixtla/neuralforecast) and Eclectic Sheep's [SheepRL](https://github.com/Eclectic-Sheep/sheeprl). [Alpaca Markets](https://alpaca.markets/) is used to fetch the historical data for the exercise.
+## Why Lightning Quant?
 
-Lightning AI's PyTorch Lightning and Lightning Fabric are agnostic to the market broker and data source. One needs only to acquire and preprocess the desired market data and then construct the requisite PyTorch DataLoaders and LightningDataModule for the PyTorch Lightning Trainer or Lightning Fabric training loop that will be used with the bespoke PyTorch model, a SheepRL algorithm, or a neuralforecast model.
+- **Rapid prototyping.** Spin up PyTorch Lightning training loops or Lightning Fabric strategies without rewriting boilerplate.
+- **Unified workflow.** Move seamlessly from data acquisition through feature engineering, labeling, optimization, and live experimentation using a single CLI (`quant`).
+- **Extensible models.** Mix and match custom PyTorch models, SheepRL agents, and neuralforecast models under one configuration.
 
-[SPY](https://www.google.com/finance/quote/SPY:NYSEARCA?sa=X&ved=2ahUKEwjQ-MKp5az_AhV2mYQIHXfxCu4Q3ecFegQIJRAX) (S&P 500) is used in examples.
+## Project Highlights
 
-## Setup
+- **End-to-end pipeline** covering data ingestion, signal generation, brute-force hyper-parameter sweeps, and label generation.
+- **Reusable components** in `src/lightning_quant/` for datasets, agents, factors, and model definitions.
+- **Command line ergonomics** powered by `click`, keeping experiments reproducible and scriptable.
+- **Reference assets** such as `docs/assets/agent-run.gif` that showcase the CLI in action.
 
-First – fork, then clone the repo. After cloning the repo to your machine, do the following in terminal to navigate to your clone:
+## Prerequisites
 
-```sh
-cd {{ path to clone }}
-```
+- macOS or Linux (Apple Silicon supported)
+- Python **3.8 – 3.10**. SheepRL currently does not support Python 3.11+
+- [Homebrew](https://brew.sh/) or [conda](https://docs.conda.io/en/latest/) recommended for managing dependencies like SWIG and TA-Lib
 
-> **Note**
->
-> SheepRL requires a Python version less than 3.11 and greater than or equal to 3.8.
-
-If you have Python 3.10, 3.9, or 3.8 as system Python, you can create and activate a virtual environment with:
+### Recommended system packages
 
 ```sh
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-If you have Python 3.11 or later as system Python, but have [homebrew](https://brew.sh/) installed, you can install Python 3.10 and then create the venv with:
-
-```sh
-brew install python@3.10
-python3.10 -m venv .venv
-source .venv/bin/activate
-```
-
-If you have Python 3.11 or later as system Python, but have [conda](https://docs.conda.io/en/latest/) or [miniconda](https://docs.conda.io/en/latest/miniconda.html) installed, create the conda env with:
-
-```sh
-conda create -n lit-quant python=3.10 -y
-conda activate lit-quant
-```
-
-Then, install an editable version of lightning-quant with:
-
-```sh
-pip install -e .
-```
-
-> **Note**
->
-> ensure your venv or conda env is activated before proceeding
-
-> **Note**
->
-> the example uses pip regardless of if you've created your env with venv or conda
-
-> **Note**
->
-> if you are on an Apple Silicon powered MacBook and encounter an error attributed box2dpy during install, you need to install SWIG using the instructions shown below to support gym and gymnasium.
-
-It is recommended to use [homebrew](https://brew.sh/) to install [SWIG](https://formulae.brew.sh/formula/swig) to support [Gym](https://github.com/openai/gym).
-
-```sh
-# if needed, install homebrew
+# Install Homebrew (if not already installed)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-# then, do
+
+# SWIG for Gym / Gymnasium support
 brew install swig
-# then attempt to pip install again
-pip install -e .
-```
 
-## Requirements
-
-The instructions shown above will install the base requirements, those requirements are:
-
-- PyTorch
-- [Lightning Fabric](https://lightning.ai/docs/fabric/stable/)
-- [TorchMetrics](https://torchmetrics.readthedocs.io/en/stable/)
-- [Weights and Biases](https://docs.wandb.ai/guides): Experiment Manager
-- [alpaca-py](https://alpaca.markets/docs/python-sdk/): Alpaca Markets Python API
-- [neuralforecast](https://github.com/Nixtla/neuralforecast): neural forecasting models created by Nixtla
-- [Ploty](https://plotly.com/python/): Data Visualization
-- [Click](https://click.palletsprojects.com/): Command Line Interfaces
-
-## Additional Requirements
-
-> **Note**
->
-> To install the Cython version of TA-Lib, you must first install the SWIG version.
-
-```sh
-# if needed, install homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-# then, do
+# TA-Lib for technical indicator features
 brew install ta-lib
-# then install Cython Ta-Lib
-pip install TA-lib
 ```
 
-## Using Lightning-Quant
+## Quick Start
 
-Lightning-Quant provides a CLI, `quant`. The available commands for `quant` are shown below.
+1. **Clone the repo**
+   ```sh
+   git clone https://github.com/<your-org>/light-quant.git
+   cd light-quant
+   ```
+2. **Create and activate an environment**
+   ```sh
+   python3 -m venv .venv          # or: conda create -n lit-quant python=3.10
+   source .venv/bin/activate      # or: conda activate lit-quant
+   ```
+3. **Install in editable mode**
+   ```sh
+   pip install -e .
+   ```
 
-![](docs/assets/lightning-quant-run.png)
+> **Tip**
+> Re-run `pip install -e .` after pulling new dependencies.
 
-To run data acquisition, feature engineering, brute force optimization, and label generation at one time, do:
+## Configuration
 
-```sh
-quant run agent --key-YOUR-ALPACA-KEY --secret=YOUR-ALPACA-SECRET-KEY --symbol=SPY
-```
-
-Alternatively, you can create a .env file and lightning-quant will automatically load the provided environment variables for you. And then use the following in terminal:
-
-```sh
-quant run agent --symbol=SPY --tasks=all
-```
-
-![](docs/assets/agent-run.gif)
-
-> **Warning**
->
-> do not commit your .env files to GitHub
-
-The contents of your `.env` file should be:
+Lightning Quant expects Alpaca credentials in environment variables. Create a `.env` file in the project root:
 
 ```txt
-API_KEY=YOUR_API_KEY
-SECRET_KEY=YOUR_SECRET_KEY
+API_KEY=YOUR_ALPACA_KEY
+SECRET_KEY=YOUR_ALPACA_SECRET
 ```
 
+Keep secrets out of source control—add `.env` to `.gitignore` if it is not already there.
 
+## CLI Overview
 
+Use the `quant` command to interact with the system. Run `quant --help` for the full command list. Common workflows:
+
+- **End-to-end pipeline**
+  ```sh
+  quant run agent --symbol=SPY --tasks=all
+  ```
+- **Targeted steps**
+  ```sh
+  # Fetch historical bars from Alpaca
+  quant data acquire --symbol=SPY
+
+  # Engineer factors
+  quant features build --symbol=SPY
+
+  # Generate labels / targets
+  quant labels build --symbol=SPY
+  ```
+
+All subcommands accept `--key`, `--secret`, and `--symbol` parameters. If `.env` is present, credentials are auto-loaded.
+
+## Working With Models
+
+Lightning Quant ships with:
+
+- `lightning_quant/models/dqn.py` – reinforcement learning agent built on SheepRL.
+- `lightning_quant/models/logistic_regression.py` – classical baseline.
+- `lightning_quant/models/neuralforecast.py` & `torchforecast.py` – time-series forecasting approaches using Nixtla and PyTorch.
+
+Swap or extend these modules by adding new classes in `src/lightning_quant/models/` and wiring them into the pipeline configuration.
+
+## Project Structure
+
+```text
+src/lightning_quant/
+│
+├── cli/                # Click-powered CLI definitions
+├── core/               # Training loops, agents, and orchestration
+├── data/               # Data modules & dataset abstractions
+├── factors/            # Feature engineering components
+├── models/             # Model implementations (RL, classical, forecasting)
+└── pipeline/           # High-level orchestration utilities
+
+tests/                  # Unit tests covering CLI + components
+docs/                   # User guides, walkthroughs, and assets
+notebooks/              # Exploratory notebooks for research
+```
+
+## Development Workflow
+
+```sh
+# install dev dependencies
+pip install -r requirements/dev.txt  # adjust path if custom
+
+# run tests
+pytest
+```
+
+For multi-device or distributed training experiments, see Lightning Fabric guidance in `src/lightning_quant/core/`.
+
+## Troubleshooting
+
+- **`box2dpy` build errors on Apple Silicon:** ensure `brew install swig` is complete before installing Gym/Gymnasium.
+- **`talib` not found:** install the Homebrew package before installing the Python wheel (`brew install ta-lib && pip install TA-Lib`).
+- **Python version mismatch:** verify `python --version` reports 3.8–3.10 inside the active environment.
+
+## Citation
+
+If Lightning Quant accelerates your research, please cite the project using the metadata in `CITATION.cff`.
         
