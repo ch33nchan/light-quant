@@ -38,7 +38,7 @@ brew install ta-lib
 
 1. **Clone the repo**
    ```sh
-   git clone https://github.com/<your-org>/light-quant.git
+   git clone [https://github.com/ch33nchan/light-quant](https://github.com/ch33nchan/light-quant)
    cd light-quant
    ```
 2. **Create and activate an environment**
